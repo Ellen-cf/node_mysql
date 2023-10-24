@@ -18,6 +18,35 @@ app.use(express.urlencoded({
 app.use(express.json())
 
 //rotas
+
+app.post("/cadastrar/save", (request, response) =>{
+     //todas as informacoes de formulario ela vem de request.body
+    //desestruturação, evita de fazer duas variaveis, é como se eu tirasse do body as duas propriedades,  que e o title e o pageqty
+    //mandar para o banco de dados
+    const {title,pageqty } = request.body
+    
+    //criando a query
+    const query = `
+        INSERT INTO books (title,pageqty)
+        VALUES('${title}', '${pageqty}')
+    `
+
+    conn.query(query, (error)=>{
+        if (error){
+            console.log(error)
+            return
+        }
+        response.redirect("/")
+    })
+})
+
+app.get("/cadastrar", (request,response) =>{
+    response.render("cadastrar")
+})
+//rota para pagina de cadastrar
+
+
+
 app.get("/",(req,res)=>{
     res.render("home")
 })
@@ -27,7 +56,7 @@ const conn = mysql.createConnection({
     host: "localhost",
     user: "root",
     password:"root",
-    dataase: "nodemysql",
+    database: "nodemysql",
     port:3307
 })
 
