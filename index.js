@@ -47,9 +47,20 @@ app.get("/cadastrar", (request,response) =>{
 
 
 
-app.get("/",(req,res)=>{
-    res.render("home")
-})
+app.get("/", (req,res)=>{
+    const sql = 'SELECT * FROM books'
+     //variavel de query para busca de banco de dados, pode vir um erro ou os dados
+    conn.query(sql, (error, data) => {
+        if (error){
+            return console.log(error)
+        }
+        const books = data
+        //vamos renderizar a home já aqui e mandar os books, livros cadastrados pra home
+        res.render("home", { books })
+    })
+
+    
+}) //vou precisar ir na pagina home para tratar como receber os dados
 
 //conectar com o mysql
 const conn = mysql.createConnection({
@@ -68,7 +79,7 @@ conn.connect((error)=>{
 
     console.log("Conectado ao MySQL!")
 
-    app.listen(300,()=>{
-        console.log("Servidor rodando na porta 300")
+    app.listen(3000,()=>{
+        console.log("Servidor rodando na porta 3000")
     })
 })
