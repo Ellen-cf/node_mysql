@@ -40,6 +40,24 @@ app.post("/cadastrar/save", (request, response) =>{
     })
 })
 
+app.get("/book/:id", (req, res)=>{
+    const id = req.params.id
+//query
+    const sql = `
+        SELECT * FROM books
+        WHERE id=${id}
+    `
+
+    conn.query(sql, (error, data) =>{
+        if (error){
+            return console.log(error)//return p para a função
+        }
+        const book = data[0]//array na posição 0, deverá ter apenas 1 livro no mesmo id
+        res.render("book", { book })
+    })
+})
+
+
 app.get("/cadastrar", (request,response) =>{
     response.render("cadastrar")
 })
