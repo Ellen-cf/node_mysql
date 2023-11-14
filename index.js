@@ -19,6 +19,24 @@ app.use(express.json())
 
 //rotas
 
+app.post("/edit/save", (request, response)=>{
+    const {id, title, pageqty} = request.body
+
+    const sql = `
+        UPDATE books 
+        SET title = '${title}', pageqty = '${pageqty}'
+        WHERE id = ${id}
+    `
+
+    conn.query(sql, (error)=>{
+        if (error){
+            return console.log(error)
+        }
+
+        response.redirect("/")
+    })
+})
+
 app.post("/cadastrar/save", (request, response) =>{
      //todas as informacoes de formulario ela vem de request.body
     //desestruturação, evita de fazer duas variaveis, é como se eu tirasse do body as duas propriedades,  que e o title e o pageqty
@@ -37,6 +55,24 @@ app.post("/cadastrar/save", (request, response) =>{
             return
         }
         response.redirect("/")
+    })
+})
+
+app.get("/edit/:id", (request, response) => {
+    const id = request.params.id
+    const sql = `
+        SELECT * FROM books
+        WHERE id = ${id}
+    `
+
+    conn.query(sql,(error, data)=>{
+        if (error){
+            return console.log(error)
+        }
+
+        const book = data[0]
+
+        response.render('edit', {book})
     })
 })
 
